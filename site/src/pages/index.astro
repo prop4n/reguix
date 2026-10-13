@@ -1,0 +1,430 @@
+---
+import '../styles/fonts.css';
+import { Image } from 'astro:assets';
+import mark from '../assets/mark.png';
+
+const description =
+	'A GNU Guix channel for software that Guix does not package, or packages far behind.';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>reguix</title>
+		<meta name="description" content={description} />
+		<link rel="icon" href="/favicon.png" />
+		<script is:inline>
+			// Follow the theme chosen in the documentation.
+			const theme = localStorage.getItem('starlight-theme');
+			const dark = theme ? theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+			document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+		</script>
+	</head>
+	<body>
+		<header class="top">
+			<a class="brand" href="/">
+				<Image src={mark} alt="" width={28} height={28} />
+				<span>reguix</span>
+			</a>
+			<nav aria-label="Main">
+				<a href="/docs/getting-started/">Docs</a>
+				<a href="/docs/packages/">Packages</a>
+				<a href="https://substitutes.reguix.org">Builds</a>
+				<a href="https://git.reguix.org/reguix">Git</a>
+			</nav>
+		</header>
+
+		<main>
+			<section class="hero">
+				<h1>The packages Guix is missing, prebuilt and&nbsp;signed.</h1>
+				<p>
+					reguix is a GNU Guix channel for software that Guix does not package, or
+					packages far behind. Every commit is signed, and every package is built
+					continuously and served as a signed substitute.
+				</p>
+				<div class="actions">
+					<a class="button primary" href="/docs/getting-started/">Get started</a>
+					<a class="button" href="/docs/packages/">Browse packages</a>
+				</div>
+			</section>
+
+			<section class="block">
+				<div class="heading">
+					<h2>Install</h2>
+					<a href="/docs/getting-started/">Full guide</a>
+				</div>
+				<ol class="steps">
+					<li>
+						<div class="step-text">
+							<h3>Add the channel</h3>
+							<p>In <code>~/.config/guix/channels.scm</code>, next to any channels already listed.</p>
+						</div>
+						<div class="code">
+							<button type="button" data-copy="channel">Copy</button>
+<pre id="channel"><code><i>(</i>cons <i>(</i>channel
+       <i>(</i>name 'reguix<i>)</i>
+       <i>(</i>url <em>"https://git.reguix.org/reguix/channel.git"</em><i>)</i>
+       <i>(</i>introduction
+        <i>(</i>make-channel-introduction
+         <em>"e8f68cc33ada44fafb6448097df8d415e739a848"</em>
+         <i>(</i>openpgp-fingerprint
+          <em>"4707 DBF9 AD31 C133 DC3D  E410 822B CCA9 C126 8873"</em><i>))))</i>
+      %default-channels<i>)</i></code></pre>
+						</div>
+					</li>
+					<li>
+						<div class="step-text">
+							<h3>Update Guix</h3>
+							<p>Guix authenticates every commit of the channel before building from it.</p>
+						</div>
+						<div class="code">
+<pre><code>guix pull</code></pre>
+						</div>
+					</li>
+					<li>
+						<div class="step-text">
+							<h3>Authorize the substitutes</h3>
+							<p>So that Guix accepts the binaries signed by the build machine.</p>
+						</div>
+						<div class="code">
+<pre><code>wget https://substitutes.reguix.org/signing-key.pub
+sudo guix archive --authorize &lt; signing-key.pub</code></pre>
+						</div>
+					</li>
+				</ol>
+			</section>
+
+			<section class="block">
+				<div class="heading">
+					<h2>How it is built</h2>
+					<a href="/docs/infrastructure/">In detail</a>
+				</div>
+				<div class="facts">
+					<div>
+						<h3>Signed history</h3>
+						<p>Guix authenticates every commit of the channel before building from it.</p>
+					</div>
+					<div>
+						<h3>Continuous builds</h3>
+						<p>
+							Cuirass builds each change on a dedicated machine. Every build and its log
+							is <a href="https://substitutes.reguix.org">public</a>.
+						</p>
+					</div>
+					<div>
+						<h3>Signed substitutes</h3>
+						<p>Binaries carry the build machine's signature, which Guix checks before use.</p>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer>
+			<div class="foot">
+				<span>reguix</span>
+				<a href="https://git.reguix.org/reguix/channel">Channel source</a>
+				<a href="https://git.reguix.org/reguix/site">Site source</a>
+				<a href="https://substitutes.reguix.org/signing-key.pub">Signing key</a>
+			</div>
+		</footer>
+
+		<script>
+			for (const button of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+				button.addEventListener('click', async () => {
+					const text = document.getElementById(button.dataset.copy!)?.textContent ?? '';
+					await navigator.clipboard.writeText(text);
+					button.textContent = 'Copied';
+					setTimeout(() => (button.textContent = 'Copy'), 1500);
+				});
+			}
+		</script>
+	</body>
+</html>
+
+<style is:global>
+	/* Neutral grays only: the logo is the one color on the page. */
+	:root {
+		--bg: #ffffff;
+		--surface: #f6f6f5;
+		--ink: #1a1a19;
+		--muted: #5c5c58;
+		--faint: #a3a39e;
+		--line: #e8e8e5;
+		--sans: 'IBM Plex Sans Variable', system-ui, sans-serif;
+		--mono: 'IBM Plex Mono', ui-monospace, monospace;
+		color-scheme: light;
+	}
+	:root[data-theme='dark'] {
+		--bg: #121212;
+		--surface: #1b1b1a;
+		--ink: #ececea;
+		--muted: #a3a39e;
+		--faint: #5c5c58;
+		--line: #2a2a28;
+		color-scheme: dark;
+	}
+	* {
+		box-sizing: border-box;
+	}
+	body {
+		margin: 0;
+		background: var(--bg);
+		color: var(--ink);
+		font: 400 1rem/1.6 var(--sans);
+		-webkit-font-smoothing: antialiased;
+	}
+	a {
+		color: var(--ink);
+		text-decoration-color: var(--faint);
+		text-underline-offset: 0.2em;
+	}
+	a:hover {
+		text-decoration-color: var(--ink);
+	}
+	:focus-visible {
+		outline: 2px solid var(--ink);
+		outline-offset: 3px;
+	}
+</style>
+
+<style>
+	.top,
+	main,
+	footer {
+		max-width: 64rem;
+		margin: 0 auto;
+		padding-inline: 1.5rem;
+	}
+
+	.top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		height: 4.5rem;
+	}
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 1.1rem;
+		letter-spacing: -0.01em;
+	}
+	nav {
+		display: flex;
+		gap: 1.75rem;
+	}
+	nav a {
+		color: var(--muted);
+		text-decoration: none;
+		font-size: 0.95rem;
+	}
+	nav a:hover {
+		color: var(--ink);
+	}
+
+	.hero {
+		padding: 6rem 0 5rem;
+	}
+	h1 {
+		max-width: 44rem;
+		margin: 0;
+		font-size: clamp(2.2rem, 5vw, 3.5rem);
+		line-height: 1.08;
+		font-weight: 600;
+		letter-spacing: -0.035em;
+		text-wrap: balance;
+	}
+	.hero p {
+		max-width: 38rem;
+		margin: 1.5rem 0 0;
+		font-size: 1.15rem;
+		color: var(--muted);
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 2.25rem;
+	}
+	.button {
+		padding: 0.65rem 1.15rem;
+		border: 1px solid var(--line);
+		border-radius: 0.35rem;
+		font-weight: 500;
+		text-decoration: none;
+		transition: border-color 0.15s;
+	}
+	.button:hover {
+		border-color: var(--faint);
+	}
+	.button.primary {
+		background: var(--ink);
+		border-color: var(--ink);
+		color: var(--bg);
+	}
+	.button.primary:hover {
+		opacity: 0.85;
+	}
+
+	.block {
+		padding: 4rem 0;
+		border-top: 1px solid var(--line);
+	}
+	.heading {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-bottom: 2.25rem;
+	}
+	h2 {
+		margin: 0;
+		font-size: 1.5rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+	.heading a {
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+	h3 {
+		margin: 0 0 0.35rem;
+		font-size: 1.05rem;
+		font-weight: 600;
+	}
+
+	/* The installation is a real sequence: the numbers carry its order. */
+	.steps {
+		display: grid;
+		gap: 2.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		counter-reset: step;
+	}
+	.steps li {
+		display: grid;
+		grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+		align-items: start;
+		gap: 2.5rem;
+		counter-increment: step;
+	}
+	.step-text h3::before {
+		content: counter(step);
+		display: inline-block;
+		width: 1.6rem;
+		color: var(--faint);
+		font: 500 0.95rem var(--mono);
+	}
+	.step-text p {
+		margin: 0;
+		padding-left: 1.6rem;
+		color: var(--muted);
+		font-size: 0.95rem;
+	}
+	.step-text code {
+		font: 0.85em var(--mono);
+		color: var(--ink);
+	}
+
+	.code {
+		position: relative;
+		min-width: 0;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: 0.35rem;
+	}
+	.code button {
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		padding: 0.15rem 0.55rem;
+		background: var(--bg);
+		border: 1px solid var(--line);
+		border-radius: 0.25rem;
+		color: var(--muted);
+		font: 0.8rem var(--sans);
+		cursor: pointer;
+	}
+	.code button:hover {
+		color: var(--ink);
+	}
+	pre {
+		margin: 0;
+		padding: 1rem 1.25rem;
+		overflow-x: auto;
+		font: 0.82rem/1.65 var(--mono);
+	}
+	pre em {
+		font-style: normal;
+		color: var(--muted);
+	}
+	pre i {
+		font-style: normal;
+		color: var(--faint);
+	}
+
+	.facts {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 2.5rem;
+	}
+	.facts p {
+		margin: 0;
+		color: var(--muted);
+	}
+
+	.foot {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+		padding-block: 2.5rem 3rem;
+		border-top: 1px solid var(--line);
+		font-size: 0.9rem;
+		color: var(--muted);
+	}
+	footer span {
+		margin-right: auto;
+		font-weight: 600;
+		color: var(--ink);
+	}
+	footer a {
+		color: var(--muted);
+		text-decoration: none;
+	}
+	footer a:hover {
+		color: var(--ink);
+	}
+
+	@media (max-width: 52rem) {
+		.hero {
+			padding: 3.5rem 0 3.5rem;
+		}
+		.steps li {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 1rem;
+		}
+		.facts {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 1.5rem;
+		}
+	}
+	@media (max-width: 40rem) {
+		nav {
+			gap: 1rem;
+		}
+		nav a:nth-child(n + 3) {
+			display: none;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.button {
+			transition: none;
+		}
+	}
+</style>

@@ -1,0 +1,47 @@
+---
+title: How it is built
+description: How reguix packages are authenticated, built and signed, and how to check them.
+---
+
+Nothing in reguix asks you to trust a binary you cannot trace back to its source.
+
+## Signed history
+
+Every commit is signed with an OpenPGP key listed in the channel's
+`.guix-authorizations` file; the public keys live in its `keyring` branch.
+`guix pull` authenticates the whole history from the introduction commit
+`e8f68cc3` and refuses any commit that is not properly signed.
+
+## Continuous builds
+
+[Cuirass](https://guix.gnu.org/cuirass/) evaluates the channel every ten minutes
+and builds every package on a dedicated machine. The
+[build status](https://substitutes.reguix.org) lists every evaluation, build and
+log. It is read-only.
+
+## Signed substitutes
+
+Build results are served by `guix publish` from `substitutes.reguix.org`, signed
+with the build machine's key:
+
+```
+(public-key
+ (ecc
+  (curve Ed25519)
+  (q #734E6C4D1A8968E45BBD968122DD85D1044415DBC765492764A04EDE0A2F3773#)))
+```
+
+Guix refuses substitutes whose signature does not match an authorized key.
+
+## Checking a build yourself
+
+A store path is derived from the package definition and all of its
+dependencies, so it identifies exactly what was built. To check that a binary
+matches its source, rebuild it locally and compare, or ask Guix to compare what
+several servers provide:
+
+```sh
+guix build --check opentofu
+guix challenge opentofu \
+  --substitute-urls='https://substitutes.reguix.org https://ci.guix.gnu.org'
+```

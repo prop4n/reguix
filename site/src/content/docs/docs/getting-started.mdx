@@ -1,0 +1,71 @@
+---
+title: Getting started
+description: Add the reguix channel and use its prebuilt substitutes.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+reguix is a regular Guix channel. Once it is added, its packages behave like any
+other: `guix install`, manifests, `guix shell`. The channel depends on
+[nonguix](https://gitlab.com/nonguix/nonguix); Guix fetches it for you.
+
+<Steps>
+
+1. Add the channel to `~/.config/guix/channels.scm`:
+
+   ```scheme
+   (cons (channel
+          (name 'reguix)
+          (url "https://git.reguix.org/reguix/channel.git")
+          (introduction
+           (make-channel-introduction
+            "e8f68cc33ada44fafb6448097df8d415e739a848"
+            (openpgp-fingerprint
+             "4707 DBF9 AD31 C133 DC3D  E410 822B CCA9 C126 8873"))))
+         %default-channels)
+   ```
+
+   If the file already lists other channels, add the `channel` form to them.
+
+2. Update Guix:
+
+   ```sh
+   guix pull
+   ```
+
+   Guix checks every commit of the channel against the introduction above
+   before it builds anything from it.
+
+3. Authorize the key that signs the substitutes:
+
+   ```sh
+   wget https://substitutes.reguix.org/signing-key.pub
+   sudo guix archive --authorize < signing-key.pub
+   ```
+
+   The key should read `#734E6C4D1A8968E45BBD968122DD85D1044415DBC765492764A04EDE0A2F3773#`.
+
+4. Install a package, adding reguix to the substitute servers:
+
+   ```sh
+   guix install opentofu \
+     --substitute-urls='https://substitutes.reguix.org
+                        https://bordeaux.guix.gnu.org
+                        https://ci.guix.gnu.org'
+   ```
+
+</Steps>
+
+To use the substitutes without repeating `--substitute-urls`, add the server to
+the Guix daemon: see [Guix System](/docs/guix-system/) for a declarative setup.
+
+## Check what is available
+
+`guix weather` reports which packages have a substitute on the server:
+
+```sh
+guix weather --substitute-urls=https://substitutes.reguix.org opentofu bun
+```
+
+A package that was just added may not have one yet: substitutes are published
+once [the build](https://substitutes.reguix.org) succeeds.

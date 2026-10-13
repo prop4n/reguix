@@ -1,0 +1,56 @@
+/* Starlight's dark theme is the default; the light one overrides it.  Neutral
+   grays only, as on the home page: the logo is the one color. */
+:root {
+	--sl-font: 'IBM Plex Sans Variable', system-ui, sans-serif;
+	--sl-font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+	--sl-color-accent-low: #2a2a28;
+	--sl-color-accent: #d4d4d0;
+	--sl-color-accent-high: #ffffff;
+
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #ececea;
+	--sl-color-gray-2: #c9c9c5;
+	--sl-color-gray-3: #a3a39e;
+	--sl-color-gray-4: #6f6f6a;
+	--sl-color-gray-5: #3a3a37;
+	--sl-color-gray-6: #222221;
+	--sl-color-black: #121212;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: #e8e8e5;
+	--sl-color-accent: #1a1a19;
+	--sl-color-accent-high: #000000;
+
+	--sl-color-white: #1a1a19;
+	--sl-color-gray-1: #2a2a28;
+	--sl-color-gray-2: #3f3f3c;
+	--sl-color-gray-3: #5c5c58;
+	--sl-color-gray-4: #8a8a85;
+	--sl-color-gray-5: #d6d6d2;
+	--sl-color-gray-6: #eeeeec;
+	--sl-color-gray-7: #f6f6f5;
+	--sl-color-black: #ffffff;
+}
+
+/* Links read as text, told apart by their underline. */
+.sl-markdown-content a:not(:where(.not-content *)) {
+	text-underline-offset: 0.2em;
+}
+
+/* On large screens Starlight caps the content width and gives the table of
+   contents half of the remaining space.  Keep that column as wide as the left
+   sidebar and let the content fill everything in between. */
+@media (min-width: 72rem) {
+	.right-sidebar-container {
+		width: var(--sl-sidebar-width);
+	}
+	[data-has-sidebar] .main-pane {
+		--sl-content-width: 100%;
+		--sl-content-margin-inline: 0;
+	}
+	[data-has-sidebar][data-has-toc] .main-pane {
+		width: calc(100% - var(--sl-sidebar-width));
+	}
+}

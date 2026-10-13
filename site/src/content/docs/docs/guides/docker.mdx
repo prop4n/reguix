@@ -1,0 +1,66 @@
+---
+title: Docker on Guix System
+description: Run the reguix Docker Engine, with Compose and Buildx, on Guix System.
+---
+
+The `docker` package of reguix follows the current Docker Engine release. On
+Guix System, the daemon runs as a service; its client and plugins install like
+any package.
+
+## Enable the service
+
+The Docker daemon needs containerd, D-Bus and elogind. Pass the reguix packages
+to `docker-service-type`, otherwise it uses the ones from Guix:
+
+```scheme
+(use-modules (gnu)
+             (gnu services dbus)
+             (gnu services desktop)
+             (gnu services docker)
+             (reguix packages docker))
+
+(operating-system
+  ;; …
+  (services
+   (append (list (service dbus-root-service-type)
+                 (service elogind-service-type)
+                 (service containerd-service-type)
+                 (service docker-service-type
+                          (docker-configuration
+                           (docker docker)
+                           (docker-cli docker-cli))))
+           %base-services)))
+```
+
+Add the users allowed to run containers to the `docker` group:
+
+```scheme
+(user-account
+  (name "alice")
+  ;; …
+  (supplementary-groups '("wheel" "docker")))
+```
+
+## Compose and Buildx
+
+`docker compose` and `docker buildx` are plugins. The `docker-cli` of reguix
+looks for them in the system profile, the user profile and the Guix Home
+profile, so installing them is enough:
+
+```sh
+guix install docker-compose docker-buildx
+docker compose version
+```
+
+## Firewall
+
+By default Docker writes its own firewall rules to publish container ports,
+bypassing an nftables configuration. If the machine has its own firewall,
+disable them and run containers with host networking:
+
+```scheme
+(docker-configuration
+ (docker docker)
+ (docker-cli docker-cli)
+ (enable-iptables? #f))
+```

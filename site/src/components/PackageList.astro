@@ -1,0 +1,111 @@
+---
+import packages from '../data/packages.json';
+
+const source = 'https://git.reguix.org/reguix/channel/src/branch/master';
+const hash = (path: string) => path.split('/').pop()!.split('-')[0];
+---
+
+<div class="packages not-content">
+	{packages.map((p) => (
+		<section class="package" id={p.name}>
+			<header>
+				<h2><a href={`#${p.name}`}>{p.name}</a></h2>
+				<span class="version">{p.version}</span>
+			</header>
+			<p class="synopsis">{p.synopsis}</p>
+			<p class="description">{p.description}</p>
+			<dl>
+				<dt>Store path</dt>
+				<dd class="store" title={p.storePath}>
+					<code>/gnu/store/<b>{hash(p.storePath).slice(0, 8)}</b>…-{p.name}-{p.version}</code>
+				</dd>
+				<dt>License</dt>
+				<dd>{p.licenses.join(', ')}</dd>
+				<dt>Links</dt>
+				<dd>
+					<a href={`${source}/${p.file}#L${p.line}`}>Definition</a>
+					<span aria-hidden="true"> · </span>
+					<a href={p.homePage}>Home page</a>
+				</dd>
+			</dl>
+		</section>
+	))}
+</div>
+
+<style>
+	.packages {
+		display: grid;
+		gap: 1rem;
+		margin-top: 2rem;
+	}
+	.package {
+		padding: 1.25rem 1.5rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		scroll-margin-top: calc(var(--sl-nav-height) + 1rem);
+	}
+	.package:target {
+		border-color: var(--sl-color-accent);
+	}
+	header {
+		display: flex;
+		align-items: baseline;
+		gap: 0.75rem;
+	}
+	h2 {
+		margin: 0;
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-lg);
+		font-weight: 600;
+	}
+	h2 a {
+		color: var(--sl-color-white);
+		text-decoration: none;
+	}
+	.version {
+		font-family: var(--sl-font-mono);
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+	.synopsis {
+		margin: 0.35rem 0 0;
+		color: var(--sl-color-white);
+	}
+	.description {
+		margin: 0.5rem 0 0;
+		color: var(--sl-color-gray-2);
+		font-size: var(--sl-text-sm);
+		line-height: 1.6;
+	}
+	dl {
+		display: grid;
+		grid-template-columns: max-content 1fr;
+		gap: 0.3rem 1.25rem;
+		margin: 1rem 0 0;
+		font-size: var(--sl-text-sm);
+	}
+	dt {
+		color: var(--sl-color-gray-3);
+	}
+	dd {
+		margin: 0;
+		min-width: 0;
+	}
+	.store code {
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-2);
+		overflow-wrap: anywhere;
+	}
+	.store b {
+		color: var(--sl-color-accent);
+		font-weight: 600;
+	}
+	@media (max-width: 30rem) {
+		dl {
+			grid-template-columns: 1fr;
+		}
+		dd + dt {
+			margin-top: 0.5rem;
+		}
+	}
+</style>

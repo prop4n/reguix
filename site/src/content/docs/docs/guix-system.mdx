@@ -1,0 +1,43 @@
+---
+title: Guix System
+description: Declare the reguix channel and substitutes in an operating-system configuration.
+---
+
+On Guix System, the channel, the substitute server and its key belong in the
+`guix-service-type` configuration, so that every `guix pull` and every
+installation on the machine uses them.
+
+Save the [signing key](https://substitutes.reguix.org/signing-key.pub) next to
+your configuration as `reguix.pub`, then extend the Guix service:
+
+```scheme
+(use-modules (gnu) (guix channels))
+
+(operating-system
+  ;; …
+  (services
+   (modify-services %base-services
+     (guix-service-type
+      config => (guix-configuration
+                 (inherit config)
+                 (channels
+                  (cons (channel
+                         (name 'reguix)
+                         (url "https://git.reguix.org/reguix/channel.git")
+                         (introduction
+                          (make-channel-introduction
+                           "e8f68cc33ada44fafb6448097df8d415e739a848"
+                           (openpgp-fingerprint
+                            "4707 DBF9 AD31 C133 DC3D  E410 822B CCA9 C126 8873"))))
+                        %default-channels))
+                 (substitute-urls
+                  (cons "https://substitutes.reguix.org"
+                        (guix-configuration-substitute-urls config)))
+                 (authorized-keys
+                  (cons (local-file "./reguix.pub")
+                        (guix-configuration-authorized-keys config))))))))
+```
+
+Apply it with `sudo guix system reconfigure`. The `channels` field sets the
+channels of the system-wide `guix pull`; users still control their own
+`~/.config/guix/channels.scm`.

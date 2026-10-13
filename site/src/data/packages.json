@@ -1,0 +1,80 @@
+[
+  {
+    "name": "bun",
+    "version": "1.4.2",
+    "synopsis": "JavaScript runtime, bundler and package manager",
+    "description": "Bun is a JavaScript and TypeScript runtime with a bundler, a test runner\nand a package manager compatible with Node.js.  This package provides\nthe upstream prebuilt binary.\n\n",
+    "homePage": "https://bun.sh",
+    "licenses": [
+      "Expat"
+    ],
+    "storePath": "/gnu/store/qj3z3wwxrbjymj88vc270xj3kpb23x7g-bun-1.4.2",
+    "file": "reguix/packages/bun.scm",
+    "line": 14
+  },
+  {
+    "name": "docker",
+    "version": "29.7.2",
+    "synopsis": "Container runtime daemon",
+    "description": "This package provides `dockerd', the Docker Engine daemon, which builds,\nruns and manages containers, their images, volumes and networks.  It\nalso provides `docker-proxy'.\n\n",
+    "homePage": "https://mobyproject.org/",
+    "licenses": [
+      "ASL 2.0"
+    ],
+    "storePath": "/gnu/store/45dyxm7xx5qwps1ycymnbnnbdp2mj87m-docker-29.7.2",
+    "file": "reguix/packages/docker.scm",
+    "line": 125
+  },
+  {
+    "name": "docker-buildx",
+    "version": "0.36.1",
+    "synopsis": "Docker plugin to build images with BuildKit",
+    "description": "Buildx extends `docker build' with the features of BuildKit:\nmulti-platform builds, multiple builders, remote caches and several\noutput formats.  Without it, `docker build' falls back to the legacy,\ndeprecated builder.\n\n",
+    "homePage": "https://github.com/docker/buildx",
+    "licenses": [
+      "ASL 2.0"
+    ],
+    "storePath": "/gnu/store/hhhkr899gdwa7kz0lqfivchgh09nbz9f-docker-buildx-0.36.1",
+    "file": "reguix/packages/docker.scm",
+    "line": 329
+  },
+  {
+    "name": "docker-cli",
+    "version": "29.7.2",
+    "synopsis": "Docker command-line interface",
+    "description": "This package provides the `docker' command, the client of the Docker\ndaemon.\n\n",
+    "homePage": "https://www.docker.com/",
+    "licenses": [
+      "ASL 2.0"
+    ],
+    "storePath": "/gnu/store/v1mrl9fhm8rbxap4fqq2m72hlafvbqrm-docker-cli-29.7.2",
+    "file": "reguix/packages/docker.scm",
+    "line": 50
+  },
+  {
+    "name": "docker-compose",
+    "version": "5.5.0",
+    "synopsis": "Docker plugin for multi-container applications",
+    "description": "Compose describes an application made of several containers in a\n`compose.yaml' file, then starts, stops and monitors it with a single\ncommand.\n\n",
+    "homePage": "https://github.com/docker/compose",
+    "licenses": [
+      "ASL 2.0"
+    ],
+    "storePath": "/gnu/store/2r6wrc7d1zv51ls4fsm7wc4wmdz6s9sm-docker-compose-5.5.0",
+    "file": "reguix/packages/docker.scm",
+    "line": 384
+  },
+  {
+    "name": "opentofu",
+    "version": "1.12.6",
+    "synopsis": "Open source infrastructure as code tool",
+    "description": "OpenTofu is a community-driven fork of Terraform based on the MPL-2.0\nlicensed versions.  It lets you define, provision and manage\ninfrastructure as human-readable configuration files that can be\nversioned, reused and shared.\n\n",
+    "homePage": "https://opentofu.org/",
+    "licenses": [
+      "MPL 2.0"
+    ],
+    "storePath": "/gnu/store/fnhz0kw0fgsnsqamz6c0jfbxs59zg9c7-opentofu-1.12.6",
+    "file": "reguix/packages/opentofu.scm",
+    "line": 10
+  }
+]
