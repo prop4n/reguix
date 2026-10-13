@@ -18,7 +18,7 @@ behind, along with its website and the infrastructure that serves it.
  (branch "main")
  (introduction
   (make-channel-introduction
-   "e8f68cc33ada44fafb6448097df8d415e739a848"
+   "5d528250f6c96488eae1d25dc6af5103121a955f"
    (openpgp-fingerprint
     "4707 DBF9 AD31 C133 DC3D  E410 822B CCA9 C126 8873"))))
 ```
